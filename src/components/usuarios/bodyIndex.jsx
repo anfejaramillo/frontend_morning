@@ -18,7 +18,7 @@ function BodyIndex(props) {
                 data={props.datosTabla}
                 path={"/usuarios"}
                 name={"Tabla de Usuarios"}
-                columns={["id", "firstName", "email", "username", "password"]}
+                columns={["_id", "firstName", "email", "username", "password"]}
                 columnsAlias={[
                     "ID",
                     "Nombre",

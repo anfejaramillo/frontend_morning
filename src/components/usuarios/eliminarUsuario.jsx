@@ -1,14 +1,37 @@
+import { useEffect } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { getUsuario } from "../../js/getData";
+import { getData, getUsuario } from "../../js/getData";
 import { estadoPrincipal, setEstadoPrincipal } from "../../js/global";
+let { createRequest } = require("../../js/getData");
+let backendConfig = require("../../js/backendConfig");
+let { useNavigate } = require("react-router-dom");
 
 function EliminarUsuario(props) {
     let { idUsuario } = useParams();
-    let usuario = getUsuario(idUsuario);
+    const [state, setState] = useState("loading");
+    let usuario = {};
+    useEffect(() => {
+        let usuarioPromise = getData(
+            backendConfig.API_ROUTE + "usuarios/get/" + idUsuario,
+            {},
+            "get",
+            {}
+        );
+        usuarioPromise.then(function (res) {
+            console.log(res);
+            setState("loaded");
+            usuario.id = res.data._id;
+        });
+    }, []);
+
     setEstadoPrincipal({
         name: "N/A - " + estadoPrincipal.name,
         auhtenticated: false,
     });
+    if (state === "loading") {
+        return <div>Loading</div>;
+    }
     return (
         <div className="col-12 w-75 mx-auto">
             <h3>Pagina: Eliminar Usuario{estadoPrincipal.name}</h3>
@@ -107,9 +130,22 @@ function EliminarUsuario(props) {
     );
 }
 
-function onClickSubmit(e) {
-    e.preventDefault();
-    console.log(e);
+function onClickSubmit(navigate) {
+    let url =
+        backendConfig.FULL_API_PATH +
+        "usuarios/delete/" +
+        document.getElementById("identifier").value;
+    let promiseCreate = createRequest(url, {}, "delete", {});
+    promiseCreate
+        .then(function (res) {
+            console.log(res);
+            if (res.status === 200) {
+                navigate("/usuarios/", true);
+            }
+        })
+        .catch(function (err) {
+            console.log(err);
+        });
 }
 
 export default EliminarUsuario;

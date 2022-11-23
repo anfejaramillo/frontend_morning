@@ -1,7 +1,19 @@
+//cargamos libreria para hacer peticiones
+let { createRequest } = require("../../js/getData");
+let backendConfig = require("../../js/backendConfig");
+let { useNavigate } = require("react-router-dom");
+
 function CreateUsuario(props) {
+    let navigate = useNavigate();
     return (
         <div className="col-12 w-75 mx-auto">
-            <h3>Pagina: Crear Usuario</h3>
+            <h3
+                onClick={() => {
+                    navigate("/usuarios");
+                }}
+            >
+                Pagina: Crear Usuario
+            </h3>
             <form>
                 <div class="row g-3">
                     <div class="">
@@ -81,8 +93,11 @@ function CreateUsuario(props) {
 
                     <button
                         class="w-100 btn btn-primary btn-lg"
-                        type="submit"
-                        onClick={onClickSubmit}
+                        type="button"
+                        onClick={(e) => {
+                            console.log(e);
+                            onClickSubmit(navigate);
+                        }}
                     >
                         Continue to checkout
                     </button>
@@ -92,8 +107,30 @@ function CreateUsuario(props) {
     );
 }
 
-function onClickSubmit(e) {
-    console.log(e);
+function onClickSubmit(navigate) {
+    let url = backendConfig.FULL_API_PATH + "usuarios/create";
+    let firstName = document.getElementById("firstName").value;
+    let username = document.getElementById("username").value;
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+    let data = {
+        firstName,
+        username,
+        email,
+        password,
+    };
+    console.log(firstName);
+    let promiseCreate = createRequest(url, {}, "post", data);
+    promiseCreate
+        .then(function (res) {
+            console.log(res);
+            if (res.status === 200) {
+                navigate("/usuarios");
+            }
+        })
+        .catch(function (err) {
+            console.log(err);
+        });
 }
 
 export default CreateUsuario;

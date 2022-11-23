@@ -1872,6 +1872,16 @@ function getData(urlRequest, headers, httpMethod, dataBody) {
     return promiseQuery;
 }
 
+function createRequest(urlRequest, headers, httpMethod, dataBody) {
+    let promiseRequest = axios({
+        url: urlRequest,
+        headers: headers,
+        method: httpMethod,
+        data: dataBody,
+    });
+    return promiseRequest;
+}
+
 function getUsuario(id) {
     let result = {};
     for (let i = 0; i < usuarios.length; i++) {
@@ -1883,4 +1893,4 @@ function getUsuario(id) {
     return result;
 }
 
-export { getData, getUsuario };
+export { getData, getUsuario, createRequest };

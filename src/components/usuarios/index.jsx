@@ -6,6 +6,7 @@ import CreateButton from "../table/CreateBotton";
 import SearchBar from "../table/SearchBar";
 import BodyIndex from "./bodyIndex";
 import { useEffect } from "react";
+import backendConfig from "../../js/backendConfig";
 
 let objCss = {
     border: "6px solid red",
@@ -17,12 +18,14 @@ function UsuariosIndex(props) {
     const [error, setError] = useState("");
 
     useEffect(() => {
+        console.log(backendConfig.FULL_API_PATH + "usuarios/all");
         let promiseData = getData(
-            "http://localhost:3500/api/usuarios/all",
+            backendConfig.FULL_API_PATH + "usuarios/all",
             {},
             "get",
             {}
         );
+
         promiseData
             .then(function (response) {
                 console.log(response);
